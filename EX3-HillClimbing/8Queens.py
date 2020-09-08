@@ -70,7 +70,7 @@ def next_best_state(board):
                 
                 new_board = Board_State(list(board.state))
                 
-                if(new_board.cost <= best_state.cost):
+                if(new_board.cost < best_state.cost):
                     best_state = new_board
                 
                 board.state[i] = start        
