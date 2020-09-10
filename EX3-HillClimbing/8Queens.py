@@ -55,29 +55,68 @@ class Board_State:
         return conflict
     
 
-def next_best_state(board): 
+# def next_best_state(board): 
+#     '''
+#     Finds the next best state (a state with minimum No of conflicts) 
+#     to climb up the hill by comparing all other neighbours
+#     Doesnot include sideway movements
+#     Wont randomize the moves
+#     This is enough for standard 14% success    
+#     '''
+#     best_state = board
+    
+#     for i in range(board.size):
+#         start = board.state[i]
+#         for j in range(1,board.size+1):
+#             if(j != start):
+#                 board.state[i] = j
+                
+#                 new_board = Board_State(list(board.state))
+                
+#                 if(new_board.cost < best_state.cost):
+#                     best_state = new_board
+                
+#                 board.state[i] = start        
+    
+#     return best_state
+
+def next_best_state(board):
     '''
     Finds the next best state (a state with minimum No of conflicts) 
-    to climb up the hill by comparing all other neighbours
+    to climb up the hill by comparing all other neighbours. 
+    Includes sideways moves, to move through the graph
+    Randomizes the next state moves so that the chances of running 
+    into an infinite loop is reduced
     '''
     best_state = board
+    
+    moves = []
     
     for i in range(board.size):
         start = board.state[i]
         for j in range(1,board.size+1):
             if(j != start):
-                board.state[i] = j
-                
-                new_board = Board_State(list(board.state))
-                
-                if(new_board.cost < best_state.cost):
-                    best_state = new_board
-                
-                board.state[i] = start        
+                moves.append([i,j])
+    
+    random.shuffle(moves)
+    
+    for move in moves:
+        i = move[0]
+        j = move[1]
+        
+        start = board.state[i]
+        board.state[i] = j
+
+        new_board = Board_State(list(board.state))
+        
+        if(new_board.cost <= best_state.cost):
+            best_state = new_board
+        
+        board.state[i] = start
     
     return best_state
 
-def Hill_Climber(cur_board):  
+def Hill_Climber(cur_board, max_iter = 10000):  
     '''
     Climbs up the Hill to find a local optimum value. 
     When a more optimum value is not found, We conclude that the 
@@ -86,10 +125,13 @@ def Hill_Climber(cur_board):
     
     next_board = next_best_state(cur_board)
     
-    if(next_board.state == cur_board.state):
+    if(cur_board.cost != next_board.cost):
+        return Hill_Climber(next_board)
+    
+    if(next_board.state == cur_board.state or max_iter==0):
         return next_board
     
-    return Hill_Climber(next_board)
+    return Hill_Climber(next_board, max_iter-1)
 
 if __name__ == "__main__":
     print("\t\tHill Climbing\n\t\t N - Queens\n")
@@ -97,6 +139,7 @@ if __name__ == "__main__":
     board_length = 8
     initial_board = Board_State([random.randint(1,board_length) for i in range(board_length)])
     #initial_board = Board_State([3,4,2,5,8,7,6,1])    
+    #initial_board = Board_State([1,1,1,1,1,1,1,1])    
     Final_board = Hill_Climber(initial_board)
     
     print("Initial Board : ",initial_board)
@@ -168,5 +211,37 @@ Final Board   :
         - - Q - - - - - 
 
 Conflict      :  1
+
+'''
+
+'''
+Output: 
+		Hill Climbing
+		 N - Queens
+
+Initial Board :  
+	Q - - - - - - - 
+	Q - - - - - - - 
+	Q - - - - - - - 
+	Q - - - - - - - 
+	Q - - - - - - - 
+	Q - - - - - - - 
+	Q - - - - - - - 
+	Q - - - - - - - 
+
+Conflict      :  28
+
+
+Final Board   :  
+	- - - - - Q - - 
+	- - - Q - - - - 
+	- Q - - - - - - 
+	- - - - - - - Q 
+	- - - - Q - - - 
+	- - - - - - Q - 
+	Q - - - - - - - 
+	- - Q - - - - - 
+
+Conflict      :  0
 
 '''
