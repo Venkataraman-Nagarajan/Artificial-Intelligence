@@ -116,7 +116,7 @@ def next_best_state(board):
     
     return best_state
 
-def Hill_Climber(cur_board, max_iter = 10000):  
+def Hill_Climber(cur_board, iter_limit = 10000):  
     '''
     Climbs up the Hill to find a local optimum value. 
     When a more optimum value is not found, We conclude that the 
@@ -128,10 +128,10 @@ def Hill_Climber(cur_board, max_iter = 10000):
     if(cur_board.cost != next_board.cost):
         return Hill_Climber(next_board)
     
-    if(next_board.state == cur_board.state or max_iter==0):
+    if(next_board.state == cur_board.state or iter_limit==0):
         return next_board
     
-    return Hill_Climber(next_board, max_iter-1)
+    return Hill_Climber(next_board, iter_limit-1)
 
 if __name__ == "__main__":
     print("\t\tHill Climbing\n\t\t N - Queens\n")
