@@ -182,37 +182,6 @@ Final Board   :
 Conflict      :  0
 
 '''
-'''
-Output @05:30
-                Hill Climbing
-                 N - Queens
-
-Initial Board :  
-        - - - Q - - - - 
-        - - Q - - - - - 
-        - Q - - - - - - 
-        - - - - Q - - - 
-        - - - Q - - - - 
-        - - Q - - - - - 
-        - Q - - - - - - 
-        - - Q - - - - - 
-
-Conflict      :  17
-
-
-Final Board   :  
-        - - Q - - - - - 
-        - - - - - Q - - 
-        - Q - - - - - - 
-        - - - - Q - - - 
-        Q - - - - - - - 
-        - - - Q - - - - 
-        - - - - - - Q - 
-        - - Q - - - - - 
-
-Conflict      :  1
-
-'''
 
 '''
 Output: 
