@@ -138,7 +138,7 @@ if __name__ == "__main__":
 
     board_length = 8
     initial_board = Board_State([random.randint(1,board_length) for i in range(board_length)])
-    #initial_board = Board_State([3,4,2,5,8,7,6,1])    
+    #initial_board = Board_State([1,2,3,4,5,3,2,1])    
     #initial_board = Board_State([1,1,1,1,1,1,1,1])    
     Final_board = Hill_Climber(initial_board)
     
