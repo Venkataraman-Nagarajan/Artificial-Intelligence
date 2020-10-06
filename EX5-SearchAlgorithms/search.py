@@ -9,7 +9,7 @@ functions.
 import sys
 from collections import deque
 
-from utils import *
+#from utils import *
 
 
 class Problem:
@@ -44,7 +44,8 @@ class Problem:
         list, as specified in the constructor. Override this method if
         checking against a single self.goal is not enough."""
         if isinstance(self.goal, list):
-            return is_in(state, self.goal)
+            #return is_in(state, self.goal)
+            return state in self.goal
         else:
             return state == self.goal
 
@@ -63,7 +64,7 @@ class Problem:
 
 
 # ______________________________________________________________________________
-
+'''
 
 class Node:
     """A node in a search tree. Contains a pointer to the parent (the node
@@ -1574,3 +1575,4 @@ def compare_graph_searchers():
                                 GraphProblem('Q', 'WA', australia_map)],
                       header=['Searcher', 'romania_map(Arad, Bucharest)',
                               'romania_map(Oradea, Neamt)', 'australia_map'])
+'''
