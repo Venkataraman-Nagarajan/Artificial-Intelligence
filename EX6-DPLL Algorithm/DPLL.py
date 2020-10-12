@@ -6,6 +6,11 @@ from copy import deepcopy
 class SATProblem:
     
     def __init__(self, formula):
+        '''
+        Initialize the class with neccessary literals and 
+        Clausal form of the string formula.
+        '''
+        
         self.formula = formula
         while(len(formula) and self.formula[0] == ' '):
             self.formula = self.formula[1:]
@@ -20,10 +25,20 @@ class SATProblem:
         self.result = None
         
     def __str__(self):
+        '''
+        To convert the object into human readable form 
+        using pretty printer.
+        '''
+        
         string = self.prettyPrint(self.clauses); 
         return string
     
     def prettyPrint(self,clauses):
+        '''
+        To convert the 2D- list into human readable form using 
+        brackets union and intersection unicode symbols
+        '''
+        
         string = ""
         
         if clauses == []:
@@ -50,6 +65,10 @@ class SATProblem:
         return string
     
     def getLiterals(self):
+        '''
+        Returns the set of literals involved in the CNF form
+        of the formula
+        '''
         
         literals = set()
         
@@ -63,6 +82,10 @@ class SATProblem:
         return sorted(literals)
 
     def printSolution(self):
+        '''
+        Printing the solution in proper format
+        '''
+        
         print('The formula is ', self)
         print('The given formula is ', self.result, '\n')
         
@@ -81,6 +104,11 @@ class SATProblem:
         print('No. of Branching by Substituition        : ',self.no_of_branches, '\n')
     
     def allTrue(self, clauses, model):
+        '''
+        Checks for every clause being true
+        with respect to the current model
+        '''
+        
         if len(clauses) == 0 or clauses == []:
             return True
         for clause in clauses:
@@ -97,6 +125,11 @@ class SATProblem:
         return True
     
     def someFalse(self, clauses, model):
+        '''
+        Checks for some clause being false
+        with respect to the current model
+        '''
+        
         if [] in clauses:
             return True
         for clause in clauses:
@@ -119,6 +152,10 @@ class SATProblem:
         return False
     
     def compliment(self, Clauses):
+        '''
+        Finds the compliment of literals on the given CNF
+        '''
+        
         clauses = deepcopy(Clauses)
         for i,clause in enumerate(clauses):
             for j,literal in enumerate(clause):
@@ -129,6 +166,11 @@ class SATProblem:
         return clauses
     
     def findPure(self, clauses, neg=False):
+        '''
+        the function traverses and finds a pure literal if any present
+        else returns 'None' saying no pure literal is been found
+        '''
+        
         pure_symbols = set()
         for clause in clauses:
             for literal in clause:
@@ -153,6 +195,12 @@ class SATProblem:
         
     
     def findPureSymbol(self, clauses):
+        '''
+        the function finds all positive pure literals first , if no postive literals 
+        are present , it tries to find a negetive literal and return them.
+        if 'None' present it returns 'None'
+        '''
+        
         positive_pure_symbol = self.findPure(clauses)
         
         if positive_pure_symbol:
@@ -168,6 +216,9 @@ class SATProblem:
         return None
         
     def findUnitClause(self, clauses, model):
+        '''
+        The function finds a unit clause from the set of clauses present
+        '''
         
         for indx,clause in enumerate(clauses):
             isUnit = True
@@ -197,6 +248,11 @@ class SATProblem:
         return None, None
     
     def applyValue(self,clauses, symbol):
+        '''
+        Reduces the clausal form by substituting the symbol with 
+        corressponding value
+        '''
+        
         remove_clause = set()
         
         for i,clause in enumerate(clauses):
@@ -224,6 +280,10 @@ class SATProblem:
         return clauses
         
     def DPLLSatisfiable(self):
+        '''
+        Runs DPLL function and finds satisfiability of the Algorithm
+        '''
+        
         print('Query:-\n\tTo find satisfiability for : ',self, '\n');
         ret =  self.DPLL(deepcopy(self.clauses),model=dict())
 
@@ -235,6 +295,18 @@ class SATProblem:
         self.printSolution()
         
     def DPLL(self, clauses, model):
+        '''
+        DPLL Algo.
+        
+        # Find whether all the clauses are true - allTrue()
+        # Find whether some clause is false - someFalse()
+        # Do unit propogation.
+        # Find pure symbol(s) and eliminate them
+        # Find the firstLiteral in the clause and replace it with 
+          True and check for satisfiability, if Unsatisfied check 
+          for substitution for False, and return Satisfiabiltity
+        
+        '''
         print('Clauses : ', self.prettyPrint(clauses))
         
         if self.allTrue(clauses, model):
