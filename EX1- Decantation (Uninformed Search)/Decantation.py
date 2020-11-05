@@ -12,6 +12,15 @@ visited_states = []
 explored_states = dict()
 parent = dict()
 
+def clear():
+  global target_list, queue_states, visited_states, explored_states, parent
+  target_list = []
+  queue_states = []
+  visited_states = []
+  explored_states = dict()
+  parent = dict()
+
+
 #functions
 def decant(i, j, a):  #tries to empty ith jar into jth one
     current = list(a)
@@ -31,10 +40,7 @@ def nextStates(current): #generates a set of unvisited next states from a curren
         for j in range(no_of_jars):
             if (i != j and current[i] != 0 and current[j] != capacity[j]):
               new_state = decant(i, j, current)
-              if(new_state not in visited_states):
-                parent[new_state] = current
-                next_states.append(new_state)
-                visited_states.append(new_state)
+              next_states.append(new_state)
     return next_states
 
 def isTargetFound(current): #checks if the target is achieved
@@ -45,6 +51,7 @@ def isTargetFound(current): #checks if the target is achieved
 
 
 def BFStraversal():  #trverses the whole graph (state space here ) only once
+  clear()
   global queue_states
   print("The order of explored states : ")
 
@@ -59,13 +66,44 @@ def BFStraversal():  #trverses the whole graph (state space here ) only once
       target_list.append(current_state)
     
     next_states = nextStates(current_state)
-    queue_states = queue_states + next_states
+    #queue_states = queue_states + next_states
+    
+    for node in next_states:
+          if node not in visited_states:
+                queue_states.append(node)
+                parent[node] = current_state
+                visited_states.append(node)
+    
     explored_states[current_state] = True
     print("\t-> ", current_state)
     queue_states.pop(0)
-  print()
     
-def printPath():   #prints path of every possible final states
+  print()
+
+def DFS(node, Parent = current):
+      global visited_states
+      parent[node] = Parent
+      visited_states.append(node)
+      
+      print("\t-> ", node)
+    
+      if(isTargetFound(node)):
+            target_list.append(node)
+      
+      for nextNode in nextStates(node):
+            if nextNode not in visited_states:
+              DFS(nextNode, node)
+
+def DFStraversal():
+    clear()
+    
+    global visited_states
+    print("The order of explored states : ")
+    
+    parent[current] = current
+    DFS(current)
+
+def printPath(string):   #prints path of every possible final states
   print("The List of Possible target State(s) is(are) : ", end="")
   print(target_list)
   print()
@@ -87,7 +125,7 @@ def printPath():   #prints path of every possible final states
     print()
 
   print()
-  print("No. of states visited by BFS: ", len(visited_states))
+  print("No. of states visited by ",string,": ", len(visited_states))
   print("The states are : ", end="")
   
   print(visited_states[0],end = "")
@@ -97,9 +135,14 @@ def printPath():   #prints path of every possible final states
 
 def main():
   print("\t\tDecantation Problem\n\n")
+  
+  print("** Breath First Search **\n")
   BFStraversal()  
-  printPath()
-
+  printPath("BFS")
+  print("\n** Depth First Search **\n")
+  DFStraversal()
+  printPath("DFS")
+  
 main()
 
 
