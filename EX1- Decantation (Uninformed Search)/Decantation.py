@@ -1,3 +1,5 @@
+import math
+
 # constants 
 no_of_jars = 3
 target = 4
@@ -80,7 +82,10 @@ def BFStraversal():  #trverses the whole graph (state space here ) only once
     
   print()
 
-def DFS(node, Parent = current):
+def DFS(node, Parent = current, depth = 0, maxDepth = math.inf):
+      if(depth == maxDepth):
+          return None
+        
       global visited_states
       parent[node] = Parent
       visited_states.append(node)
@@ -92,7 +97,7 @@ def DFS(node, Parent = current):
       
       for nextNode in nextStates(node):
             if nextNode not in visited_states:
-              DFS(nextNode, node)
+              DFS(nextNode, node, depth+1, maxDepth)
 
 def DFStraversal():
     clear()
@@ -103,8 +108,21 @@ def DFStraversal():
     parent[current] = current
     DFS(current)
 
+def DLStraversal():
+      depth = 1
+      print("The order of explored states : ")
+    
+      while(True):
+            clear()
+            print('\nDEPTH ', depth, ' : ')
+            DFS(current, maxDepth=depth)
+            
+            if(target_list):
+                  return None
+            depth+=1
+
 def printPath(string):   #prints path of every possible final states
-  print("The List of Possible target State(s) is(are) : ", end="")
+  print("\nThe List of Possible target State(s) is(are) : ", end="")
   print(target_list)
   print()
   for psbl_target in target_list: 
@@ -133,23 +151,37 @@ def printPath(string):   #prints path of every possible final states
     print(", ",visited_states[i],end="")
   print()
 
-def main():
-  print("\t\tDecantation Problem\n\n")
+if __name__  == "__main__":
+  print("\t\tDecantation Problem")
+  print("\t\t~~~~~~~~~~~ ~~~~~~~")
+  
+  print('\n---------------------------------------------------\n')
   
   print("** Breath First Search **\n")
   BFStraversal()  
   printPath("BFS")
+  
+  print('\n---------------------------------------------------\n')
+  
   print("\n** Depth First Search **\n")
   DFStraversal()
   printPath("DFS")
   
-main()
+  print('\n---------------------------------------------------\n')
+  
+  print("\n** Depth Limited Search **\n")
+  DLStraversal()
+  printPath("DLS")
+  
+  print('\n---------------------------------------------------\n')
+  
 
 '''
-OUTPUT :
-
+OUTPUT:
                 Decantation Problem
+                ~~~~~~~~~~~ ~~~~~~~
 
+---------------------------------------------------
 
 ** Breath First Search **
 
@@ -171,6 +203,7 @@ The order of explored states :
         ->  (4, 4, 0)
         ->  (4, 1, 3)
 
+
 The List of Possible target State(s) is(are) : [(1, 4, 3), (4, 4, 0), (4, 1, 3)]
 
 Path to reach  (1, 4, 3)  : (8, 0, 0) ->  (3, 5, 0) ->  (3, 2, 3) ->  (6, 2, 0) ->  (6, 0, 2) ->  (1, 5, 2) ->  (1, 4, 3)
@@ -179,6 +212,9 @@ Path to reach  (4, 1, 3)  : (8, 0, 0) ->  (5, 0, 3) ->  (5, 3, 0) ->  (2, 3, 3) 
 
 No. of states visited by  BFS :  16
 The states are : (8, 0, 0),  (3, 5, 0),  (5, 0, 3),  (0, 5, 3),  (3, 2, 3),  (5, 3, 0),  (6, 2, 0),  (2, 3, 3),  (6, 0, 2),  (2, 5, 1),  (1, 5, 2),  (7, 0, 1),  (1, 4, 3),  (7, 1, 0),  (4, 4, 0),  (4, 1, 3)
+
+---------------------------------------------------
+
 
 ** Depth First Search **
 
@@ -199,6 +235,7 @@ The order of explored states :
         ->  (6, 0, 2)
         ->  (6, 2, 0)
         ->  (3, 2, 3)
+
 The List of Possible target State(s) is(are) : [(4, 1, 3), (4, 4, 0), (1, 4, 3)]
 
 Path to reach  (4, 1, 3)  : (8, 0, 0) ->  (3, 5, 0) ->  (0, 5, 3) ->  (5, 0, 3) ->  (5, 3, 0) ->  (2, 3, 3) ->  (2, 5, 1) ->  (7, 0, 1) ->  (7, 1, 0) ->  (4, 1, 3)
@@ -207,74 +244,81 @@ Path to reach  (1, 4, 3)  : (8, 0, 0) ->  (3, 5, 0) ->  (0, 5, 3) ->  (5, 0, 3) 
 
 No. of states visited by  DFS :  16
 The states are : (8, 0, 0),  (3, 5, 0),  (0, 5, 3),  (5, 0, 3),  (5, 3, 0),  (2, 3, 3),  (2, 5, 1),  (7, 0, 1),  (7, 1, 0),  (4, 1, 3),  (4, 4, 0),  (1, 4, 3),  (1, 5, 2),  (6, 0, 2),  (6, 2, 0),  (3, 2, 3)
-'''
-'''
-OUTPUT :
 
-        Decantation Problem
+---------------------------------------------------
 
+
+** Depth Limited Search **
 
 The order of explored states : 
-    ->  (8, 0, 0)
-    ->  (3, 5, 0)
-    ->  (5, 0, 3)
-    ->  (0, 5, 3)
-    ->  (3, 2, 3)
-    ->  (5, 3, 0)
-    ->  (6, 2, 0)
-    ->  (2, 3, 3)
-    ->  (6, 0, 2)
-    ->  (2, 5, 1)
-    ->  (1, 5, 2)
-    ->  (7, 0, 1)
-    ->  (1, 4, 3)
-    ->  (7, 1, 0)
-    ->  (4, 4, 0)
-    ->  (4, 1, 3)
 
-The List of Possible target State(s) is(are) : [(1, 4, 3), (4, 4, 0), (4, 1, 3)]
+DEPTH  1  : 
+        ->  (8, 0, 0)
+
+DEPTH  2  : 
+        ->  (8, 0, 0)
+        ->  (3, 5, 0)
+        ->  (5, 0, 3)
+
+DEPTH  3  : 
+        ->  (8, 0, 0)
+        ->  (3, 5, 0)
+        ->  (0, 5, 3)
+        ->  (3, 2, 3)
+        ->  (5, 0, 3)
+        ->  (5, 3, 0)
+
+DEPTH  4  : 
+        ->  (8, 0, 0)
+        ->  (3, 5, 0)
+        ->  (0, 5, 3)
+        ->  (5, 0, 3)
+        ->  (3, 2, 3)
+        ->  (6, 2, 0)
+
+DEPTH  5  : 
+        ->  (8, 0, 0)
+        ->  (3, 5, 0)
+        ->  (0, 5, 3)
+        ->  (5, 0, 3)
+        ->  (5, 3, 0)
+        ->  (3, 2, 3)
+        ->  (6, 2, 0)
+        ->  (6, 0, 2)
+
+DEPTH  6  : 
+        ->  (8, 0, 0)
+        ->  (3, 5, 0)
+        ->  (0, 5, 3)
+        ->  (5, 0, 3)
+        ->  (5, 3, 0)
+        ->  (2, 3, 3)
+        ->  (3, 2, 3)
+        ->  (6, 2, 0)
+        ->  (6, 0, 2)
+        ->  (1, 5, 2)
+
+DEPTH  7  : 
+        ->  (8, 0, 0)
+        ->  (3, 5, 0)
+        ->  (0, 5, 3)
+        ->  (5, 0, 3)
+        ->  (5, 3, 0)
+        ->  (2, 3, 3)
+        ->  (2, 5, 1)
+        ->  (3, 2, 3)
+        ->  (6, 2, 0)
+        ->  (6, 0, 2)
+        ->  (1, 5, 2)
+        ->  (1, 4, 3)
+
+The List of Possible target State(s) is(are) : [(1, 4, 3)]
 
 Path to reach  (1, 4, 3)  : (8, 0, 0) ->  (3, 5, 0) ->  (3, 2, 3) ->  (6, 2, 0) ->  (6, 0, 2) ->  (1, 5, 2) ->  (1, 4, 3)
-Path to reach  (4, 4, 0)  : (8, 0, 0) ->  (3, 5, 0) ->  (3, 2, 3) ->  (6, 2, 0) ->  (6, 0, 2) ->  (1, 5, 2) ->  (1, 4, 3) ->  (4, 4, 0)
-Path to reach  (4, 1, 3)  : (8, 0, 0) ->  (5, 0, 3) ->  (5, 3, 0) ->  (2, 3, 3) ->  (2, 5, 1) ->  (7, 0, 1) ->  (7, 1, 0) ->  (4, 1, 3)
 
-No. of states visited by BFS:  16
-The states are : (8, 0, 0),  (3, 5, 0),  (5, 0, 3),  (0, 5, 3),  (3, 2, 3),  (5, 3, 0),  (6, 2, 0),  (2, 3, 3),  (6, 0, 2),  (2, 5, 1),  (1, 5, 2),  (7, 0, 1),  (1, 4, 3),  (7, 1, 0),  (4, 4, 0),  (4, 1, 3)
+No. of states visited by  DLS :  12
+The states are : (8, 0, 0),  (3, 5, 0),  (0, 5, 3),  (5, 0, 3),  (5, 3, 0),  (2, 3, 3),  (2, 5, 1),  (3, 2, 3),  (6, 2, 0),  (6, 0, 2),  (1, 5, 2),  (1, 4, 3)
 
-'''
-
-
-'''
-OUTPUT @3:35 submission:
-
-        Decantation Problem
-
-
-The order of explored states : 
-    ->  (8, 0, 0)
-    ->  (3, 5, 0)
-    ->  (5, 0, 3)
-    ->  (0, 5, 3)
-    ->  (3, 2, 3)
-    ->  (5, 3, 0)
-    ->  (6, 2, 0)
-    ->  (2, 3, 3)
-    ->  (6, 0, 2)
-    ->  (2, 5, 1)
-    ->  (1, 5, 2)
-    ->  (7, 0, 1)
-    ->  (1, 4, 3)
-    ->  (7, 1, 0)
-    ->  (4, 4, 0)
-    ->  (4, 1, 3)
-
-The List of Possible target State(s) is(are) : [(1, 4, 3), (4, 4, 0), (4, 1, 3)]
-
-Path to reach  (1, 4, 3)  : [(8, 0, 0), (3, 5, 0), (3, 2, 3), (6, 2, 0), (6, 0, 2), (1, 5, 2), (1, 4, 3)]
-Path to reach  (4, 4, 0)  : [(8, 0, 0), (3, 5, 0), (3, 2, 3), (6, 2, 0), (6, 0, 2), (1, 5, 2), (1, 4, 3), (4, 4, 0)]
-Path to reach  (4, 1, 3)  : [(8, 0, 0), (5, 0, 3), (5, 3, 0), (2, 3, 3), (2, 5, 1), (7, 0, 1), (7, 1, 0), (4, 1, 3)]
-
-No. of states visited by BFS:  16
-The states are : [(8, 0, 0), (3, 5, 0), (5, 0, 3), (0, 5, 3), (3, 2, 3), (5, 3, 0), (6, 2, 0), (2, 3, 3), (6, 0, 2), (2, 5, 1), (1, 5, 2), (7, 0, 1), (1, 4, 3), (7, 1, 0), (4, 4, 0), (4, 1, 3)]
+---------------------------------------------------
 
 '''
