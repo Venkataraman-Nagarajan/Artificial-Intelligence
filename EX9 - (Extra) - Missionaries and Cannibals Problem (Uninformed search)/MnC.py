@@ -15,7 +15,7 @@ from collections import deque
 # B = 'L' -> Boat on left bank
 # B = 'R' -> Boat on right bank
 
-
+#constants used for indexing
 M_L = 0
 M_R = 1
 C_L = 2
@@ -25,7 +25,10 @@ B = 4
 class State:
      
     def __init__(self, state):
-        
+        '''
+        Initializes the state with neccessary elements
+        the state id represented as a 5 tuple
+        '''
         
         self.state = state
         self.M = state[M_L] + state[M_R]
@@ -33,6 +36,9 @@ class State:
         self.parent = None
     
     def __str__(self):
+        '''
+        Converts the state into human readable form
+        '''
         
         string = ""
         string += '\t' + ('  ' * (self.M - self.state[M_L])) + ('M ' * (self.state[M_L])) + '|'
@@ -49,7 +55,13 @@ class State:
         return string
         
     def isValidState(self):
-
+        '''
+        Checks whether the state is valid or not.
+        A state is valid if 
+            the Cannibals do not out-number the missionaries on either side
+            of the river
+        '''
+        
         if self.state[C_L] < 0 or self.state[C_R] < 0 or self.state[M_L] < 0 or self.state[M_R] < 0:
             return False
         if (self.state[C_L] > self.state[M_L] and self.state[M_L] > 0) or (self.state[C_R] > self.state[M_R] and self.state[M_R] > 0):
@@ -57,6 +69,14 @@ class State:
         return True
     
     def isGoalState(self):
+        '''
+        Checks whether the state is a goal state or not.
+        A state is a goal state if
+            It is a valid state
+            All the missionaries reach the right hand side of the river
+            All the cannibals reach the right hand side of the river
+        '''
+        
         if  self.isValidState() and \
             self.M == self.state[M_R] and self.state[M_L] == 0 and \
             self.C == self.state[C_R] and self.state[C_L] == 0 and \
@@ -65,7 +85,18 @@ class State:
         return False
     
     def nextStates(self):
-    
+        '''
+        Generates a next of next states possible
+        
+        Rule : one or two people can only travel in the boat
+        
+        Next possible states:
+            1) One missionary rides the boat
+            2) One cannibal rides the boat
+            3) Two missionaries ride the boat
+            4) Two cannibals ride the boat
+            5) One missionary and one cannibal rides the boat    
+        '''
         next_states = []
         
         
@@ -140,6 +171,10 @@ class State:
 class Solver:
     
     def setPath(self, goal):
+        '''
+        Returns the path (list) from initial state to the goal state
+        '''
+        
         start = goal
         path = []
         while start:
@@ -149,7 +184,10 @@ class Solver:
         return path[::-1]
     
     def BFS(self, state):
-
+        '''
+        Performs BFS Traversal
+        '''
+        
         frontier = deque()
         visited_states = set()
         
@@ -187,6 +225,7 @@ class Solver:
                 print('\t\t  => Goal State Reached\n')
             else:
                 print('  ---> ')
+
 
 if __name__ == "__main__":
     
