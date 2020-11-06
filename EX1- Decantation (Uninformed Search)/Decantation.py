@@ -1,5 +1,5 @@
 import math
-
+import random
 # constants 
 no_of_jars = 3
 target = 4
@@ -43,6 +43,7 @@ def nextStates(current): #generates a set of unvisited next states from a curren
             if (i != j and current[i] != 0 and current[j] != capacity[j]):
               new_state = decant(i, j, current)
               next_states.append(new_state)
+    random.shuffle(next_states)
     return next_states
 
 def isTargetFound(current): #checks if the target is achieved
