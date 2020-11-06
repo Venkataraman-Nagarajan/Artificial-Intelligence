@@ -138,18 +138,20 @@ class SATProblem:
         
         if len(clauses) == 0 or clauses == []:
             return True
-        for clause in clauses:
-            someTrue = False
-            for literal in clause:
-                if '¬' in literal and literal[1:] in model and model[literal[1:]] == False:
-                    someTrue = True
-                    break
-                elif '¬' not in literal and literal in model and model[literal] == True:
-                    someTrue = True
-                    break
-            if not someTrue:
-                 return False
-        return True
+        # --> <--
+        return False
+        # for clause in clauses:
+        #     someTrue = False
+        #     for literal in clause:
+        #         if '¬' in literal and literal[1:] in model and model[literal[1:]] == False:
+        #             someTrue = True
+        #             break
+        #         elif '¬' not in literal and literal in model and model[literal] == True:
+        #             someTrue = True
+        #             break
+        #     if not someTrue:
+        #          return False
+        # return True
     
     def someFalse(self, clauses, model):
         '''
@@ -159,23 +161,23 @@ class SATProblem:
         
         if [] in clauses:
             return True
-        for clause in clauses:
-            clauseFalse = True
-            for literal in clause:
-                if '¬' in literal and literal[1:] in model and model[literal[1:]] == False:
-                    clauseFalse = False
-                    break
-                elif '¬' not in literal and literal in model and model[literal] == True:
-                    clauseFalse = False
-                    break
-                elif '¬' in literal and literal[1:] not in model:
-                    clauseFalse = False
-                    break
-                elif '¬' not in literal and literal not in model:
-                    clauseFalse = False
-                    break
-            if clauseFalse:
-                 return True
+        # for clause in clauses:
+        #     clauseFalse = True
+        #     for literal in clause:
+        #         if '¬' in literal and literal[1:] in model and model[literal[1:]] == False:
+        #             clauseFalse = False
+        #             break
+        #         elif '¬' not in literal and literal in model and model[literal] == True:
+        #             clauseFalse = False
+        #             break
+        #         elif '¬' in literal and literal[1:] not in model:
+        #             clauseFalse = False
+        #             break
+        #         elif '¬' not in literal and literal not in model:
+        #             clauseFalse = False
+        #             break
+        #     if clauseFalse:
+        #          return True
         return False
     
     def compliment(self, Clauses):
@@ -255,22 +257,22 @@ class SATProblem:
                 return indx, clause[0]
             
             
-        for indx,clause in enumerate(clauses):
-            isUnit = True
-            undefined = []
+        # for indx,clause in enumerate(clauses):
+        #     isUnit = True
+        #     undefined = []
             
-            for literal in clause:
-                if '¬' in literal and literal[1:] in model and model[literal[1:]] == False:
-                    isUnit = False
-                elif '¬' not in literal and literal in model and model[literal] == True:
-                    isUnit = False
-                elif '¬' in literal and literal[1:] not in model:
-                    undefined.append(literal)
-                elif '¬' not in literal and literal not in model:
-                    undefined.append(literal)
+        #     for literal in clause:
+        #         if '¬' in literal and literal[1:] in model and model[literal[1:]] == False:
+        #             isUnit = False
+        #         elif '¬' not in literal and literal in model and model[literal] == True:
+        #             isUnit = False
+        #         elif '¬' in literal and literal[1:] not in model:
+        #             undefined.append(literal)
+        #         elif '¬' not in literal and literal not in model:
+        #             undefined.append(literal)
             
-            if isUnit and len(undefined)==1:
-                return indx, undefined[0]
+        #     if isUnit and len(undefined)==1:
+        #         return indx, undefined[0]
                 
         return None, None
     
@@ -353,13 +355,45 @@ class SATProblem:
 
             return False
         
+        pure_symbol = self.findPureSymbol(clauses)
+        
+        if pure_symbol:
+            
+            self.pure_literal_depth += 1
+            
+            # remove_clause = set()
+            
+            # for i,clause in enumerate(clauses):
+            #     for literal in clause:
+            #         if literal == pure_symbol:
+            #             remove_clause.add(i)
+            #             break
+            
+            # remove_clause = sorted(remove_clause)
+            
+            # for indx in remove_clause[::-1]:
+            #     clauses.pop(indx)
+        
+            if '¬' in pure_symbol:
+                model[pure_symbol[1:]] = False
+            else:
+                model[pure_symbol] = True
+            
+            clauses = self.applyValue(clauses, pure_symbol)            
+            
+            print('Pure Symbol Found : ',pure_symbol)
+            print('Reduced Clause(s)   : ',self.prettyPrint(clauses))
+            print()
+            return self.DPLL(deepcopy(clauses), deepcopy(model))
+        
+        
         unit_clause_indx, unit_symbol = self.findUnitClause(clauses, model)
         
         if unit_clause_indx != None:
             
             self.unit_depth += 1
             
-            clauses.pop(unit_clause_indx)
+            #clauses.pop(unit_clause_indx)
             
             if '¬' in unit_symbol:
                 model[unit_symbol[1:]] = False
@@ -372,37 +406,6 @@ class SATProblem:
             print('Reduced Clasue(s)   : ',self.prettyPrint(clauses))
             print()
             return self.DPLL(deepcopy(clauses), deepcopy(model))
-        
-        pure_symbol = self.findPureSymbol(clauses)
-        
-        if pure_symbol:
-            
-            self.pure_literal_depth += 1
-            
-            remove_clause = set()
-            
-            for i,clause in enumerate(clauses):
-                for literal in clause:
-                    if literal == pure_symbol:
-                        remove_clause.add(i)
-                        break
-            
-            remove_clause = sorted(remove_clause)
-            
-            for indx in remove_clause[::-1]:
-                clauses.pop(indx)
-        
-            if '¬' in pure_symbol:
-                model[pure_symbol[1:]] = False
-            else:
-                model[pure_symbol] = True
-            
-            print('Pure Symbol Found : ',pure_symbol)
-            print('Reduced Clause(s)   : ',self.prettyPrint(clauses))
-            print()
-            return self.DPLL(deepcopy(clauses), deepcopy(model))
-        
-        
 
         #naive checker 
         
@@ -453,7 +456,7 @@ class SATProblem:
         return False
     
 if __name__ == "__main__":
-    print('\t\t DPLL Algorithm\n\n')
+    print('\t\t DPLL Algorithm\n')
     
     print("---------------------------------------------------\n")  
     solver = SATProblem('A B ¬C, A ¬B D');
@@ -472,11 +475,14 @@ if __name__ == "__main__":
     solver.DPLLSatisfiable()
     
     print("---------------------------------------------------\n")
+    solver = SATProblem("X Y Z, ¬X ¬Y ¬Z")
+    solver.DPLLSatisfiable()
+    
+    print("---------------------------------------------------\n")
 
 '''
 OUTPUT:
-                DPLL Algorithm
-
+                 DPLL Algorithm
 
 ---------------------------------------------------
 
@@ -592,6 +598,36 @@ No. of Pure literal(s) elimination tried :  1
 No. of Unit propogations                 :  1 
 
 No. of Branching by Substituition        :  0 
+
+---------------------------------------------------
+
+Query:-
+        To find satisfiability for :  (X ∨ Y ∨ Z) ∧ (¬X ∨ ¬Y ∨ ¬Z) 
+
+Clauses :  (X ∨ Y ∨ Z) ∧ (¬X ∨ ¬Y ∨ ¬Z)
+Substituting  X  : True
+Reduced Clause(s) :  (¬Y ∨ ¬Z)
+
+Clauses :  (¬Y ∨ ¬Z)
+Pure Symbol Found :  ¬Y
+Reduced Clause(s)   :  (True)
+
+Clauses :  (True)
+Resultant Clause   : 🟩
+Model obtained ...
+
+The formula is  (X ∨ Y ∨ Z) ∧ (¬X ∨ ¬Y ∨ ¬Z)
+The given formula is  SATISFIABLE 
+
+         X  : True
+         Y  : False
+         Z  : Don't Care
+
+No. of Pure literal(s) elimination tried :  1 
+
+No. of Unit propogations                 :  0 
+
+No. of Branching by Substituition        :  1 
 
 ---------------------------------------------------
 '''
