@@ -103,6 +103,33 @@ class SATProblem:
         print('No. of Unit propogations                 : ',self.unit_depth, '\n')
         print('No. of Branching by Substituition        : ',self.no_of_branches, '\n')
     
+    '''
+    function DPLL-SATISFIABLE ?(s) returns true or false
+        inputs: s, a sentence in propositional logic
+        
+        clauses ← the set of clauses in the CNF representation of s
+        symbols ← a list of the proposition symbols in s
+        return DPLL(clauses, symbols, { })
+    
+    
+    function DPLL(clauses, symbols, model ) returns true or false
+        if (every clause in clauses is true in model) then return true
+        if (some clause in clauses is false in model) then return false
+        
+        P , value ← FIND-PURE-SYMBOL (symbols, clauses, model )
+        if (P is non-null) then 
+            return DPLL(clauses, symbols – P , model ∪ {P =value})
+        
+        P , value ← FIND-UNIT-CLAUSE (clauses, model )
+        if (P is non-null) then 
+            return DPLL(clauses, symbols – P , model ∪ {P =value})
+        
+        P ← FIRST (symbols); rest ← REST (symbols)
+        return  DPLL(clauses, rest, model ∪ {P =true}) or
+                DPLL(clauses, rest, model ∪ {P =false}))
+    '''
+    
+    
     def allTrue(self, clauses, model):
         '''
         Checks for every clause being true
@@ -302,9 +329,9 @@ class SATProblem:
         # Find whether some clause is false - someFalse()
         # Do unit propogation.
         # Find pure symbol(s) and eliminate them
-        # Find the firstLiteral in the clause and replace it with 
+        # Find the first Literal in the clause and replace it with 
           True and check for satisfiability, if Unsatisfied check 
-          for substitution for False, and return Satisfiabiltity
+          by substituiting False, and return Satisfiabiltity
         
         '''
         print('Clauses : ', self.prettyPrint(clauses))

@@ -4,7 +4,7 @@ import random
 
 def manhattan_distance(A,B):
     '''
-    Calculates and returns the manhattan distance between two giiven points
+    Calculates and returns the manhattan distance between two given points
     '''
     
     return abs(A[0]-B[0])+abs(A[1]-B[1])

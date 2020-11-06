@@ -64,6 +64,30 @@ class Board_State:
         return conflict
 
 class Genetic_Solver:
+    '''
+    function GENETIC -ALGORITHM ( population , FITNESS -FN ) returns an individual
+        inputs: population , a set of individuals
+                FITNESS-FN , a function that measures the fitness of an individual
+    
+        repeat
+            new population ← empty set
+            for i = 1 to SIZE ( population) do
+                x ← RANDOM -SELECTION ( population, FITNESS-FN )
+                y ← RANDOM -SELECTION ( population, FITNESS-FN )
+                child ← REPRODUCE (x , y)
+                if (small random probability) then child ← MUTATE (child )
+                add child to new population
+            population ← new population
+        until some individual is fit enough, or enough time has elapsed
+        return the best individual in population , according to FITNESS-FN
+    
+    
+    function REPRODUCE (x , y) returns an individual
+        inputs: x , y, parent individuals
+        
+        n ← LENGTH (x); c ← random number from 1 to n
+        return APPEND (SUBSTRING (x , 1, c), SUBSTRING (y, c + 1, n))
+    '''
     
     Converging_cnt  = 0
     Converged_board = None
@@ -116,8 +140,8 @@ class Genetic_Solver:
     
     def crossover(self,board_population, itr):
         '''
-        Takes two boards among the best boards and sliced them 
-        and combines them with the slice of other board (basic crossover)
+        Takes two boards among the best boards and slice them 
+        Combine them to form children (basic crossover)
         
         Let the boards be X and Y
         ( ---> ) means sliced into 
